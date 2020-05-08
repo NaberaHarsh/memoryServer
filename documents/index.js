@@ -1,4 +1,4 @@
-module.exports=({count,image,title,description})=>{
+module.exports=({pageNo,image,title,description})=>{
     return`
     <doctype html>
     <html>
@@ -8,8 +8,8 @@ module.exports=({count,image,title,description})=>{
         <body>
             <h1>${title}</h1>
             <h1>${description}</h1>
-            <img src="${image}" />
-            <h2>${count}</h2>
+            <img src=${`blob:${image}`} />
+            <h2>${pageNo}</h2>
         </body>
     </html>
 `

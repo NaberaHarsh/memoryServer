@@ -4,6 +4,18 @@ var mongoose = require('mongoose');
 const cors = require("cors")
 const pdf = require('html-pdf');
 const pdfTemplate = require('./documents')
+// var multer  = require('multer')
+// const path = require('path');
+
+// const storage = multer.diskStorage({
+//     destination : function(req,file,cb){
+//         cb(null,'./uploads');
+//     },
+//     filename: function(req,file,cb){
+//         cb(null, file.originalname);
+//     }
+// });
+// var upload = multer({ storage: storage });
 
 const Schema = mongoose.Schema;
 
@@ -28,7 +40,9 @@ description:String
 
 const Content=mongoose.model('Content' ,contentSchema);
 
-server.post('/create-pdf',(req,res)=>{
+server.post('/createpdf', (req,res)=>{
+    // req.body will hold the text fields, if there were any
+    console.log(req.body);
 pdf.create(pdfTemplate(req.body), {}).toFile('memory.pdf', (err)=>{
     if(err){
         console.log("error");
@@ -41,7 +55,7 @@ pdf.create(pdfTemplate(req.body), {}).toFile('memory.pdf', (err)=>{
 
 });
 
-server.get('/fetch-pdf', (req,res)=>{
+server.get('/fetchpdf', (req,res)=>{
 res.sendFile(`${__dirname}/memory.pdf`)
 })
 
@@ -59,10 +73,10 @@ server.post("/content",function(req,res){
     content.save();
 })
 
-server.get("/demo/:name", function (req, res) {
-    Content.findOne({name:req.params.name},function(err,doc){
+server.get("/getContent", function (req, res) {
+    Content.find({},function(err,doc){
         console.log(doc);
-        res.json(doc);
+        res.send(doc);
     })
 })
 
