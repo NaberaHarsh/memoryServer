@@ -4,18 +4,20 @@ var mongoose = require('mongoose');
 const cors = require("cors")
 const pdf = require('html-pdf');
 const pdfTemplate = require('./documents')
-// var multer  = require('multer')
-// const path = require('path');
+var multer  = require('multer')
+const path = require('path');
+// var upload = multer({ dest: 'uploads/' })
 
-// const storage = multer.diskStorage({
-//     destination : function(req,file,cb){
-//         cb(null,'./uploads');
-//     },
-//     filename: function(req,file,cb){
-//         cb(null, file.originalname);
-//     }
-// });
-// var upload = multer({ storage: storage });
+
+const storage = multer.diskStorage({
+    destination : function(req,file,cb){
+        cb(null,'./uploads');
+    },
+    filename: function(req,file,cb){
+        cb(null, file.originalname);
+    }
+});
+var upload = multer({ storage: storage });
 
 const Schema = mongoose.Schema;
 
@@ -40,24 +42,31 @@ description:String
 
 const Content=mongoose.model('Content' ,contentSchema);
 
-server.post('/createpdf', (req,res)=>{
+server.post('/profile', upload.single("file"), function (req, res, next) {
+    // req.file is the `avatar` file
+    console.log(req.file.filename);
     // req.body will hold the text fields, if there were any
-    console.log(req.body);
-pdf.create(pdfTemplate(req.body), {}).toFile('memory.pdf', (err)=>{
-    if(err){
-        console.log("error");
-        res.send( Promise.reject());
-    }
-    else{
-    res.send( Promise.resolve());
-    }
-});
+    res.json(req.file.filename);
+  })
 
-});
+// server.post('/createpdf', (req,res)=>{
+//     // req.body will hold the text fields, if there were any
+//     console.log(req.body);
+// pdf.create(pdfTemplate(req.body), {}).toFile('memory.pdf', (err)=>{
+//     if(err){
+//         console.log("error");
+//         res.send( Promise.reject());
+//     }
+//     else{
+//     res.send( Promise.resolve());
+//     }
+// });
 
-server.get('/fetchpdf', (req,res)=>{
-res.sendFile(`${__dirname}/memory.pdf`)
-})
+// });
+
+// server.get('/fetchpdf', (req,res)=>{
+// res.sendFile(`${__dirname}/memory.pdf`)
+// })
 
 
 server.post("/content",function(req,res){
