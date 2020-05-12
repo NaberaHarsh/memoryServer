@@ -85,7 +85,7 @@ server.post("/content",function(req,res){
 server.get("/getContent", function (req, res) {
     Content.find({},function(err,doc){
         console.log(doc);
-        res.send(doc);
+        res.json(doc);
     })
 })
 
@@ -94,9 +94,13 @@ server.get("/json/:name/:surname", function (req, res) {
     res.send(req.params);
     console.log(req.params);
 })
-server.post("/body", function (req, res) {
-    res.send(req.body);
-    console.log(req.body);
+server.get("/body", function (req, res) {
+
+    let data = './uploads/10.jpg';
+    let buff = new Buffer(data);
+    let base64data = buff.toString('base64');
+    res.send(base64data);
+    console.log('"' + data + '" converted to Base64 is "' + base64data + '"');
 })
 
 server.listen(8080, function () {
