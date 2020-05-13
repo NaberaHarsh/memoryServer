@@ -6,6 +6,7 @@ const pdf = require('html-pdf');
 const pdfTemplate = require('./documents')
 var multer  = require('multer')
 const path = require('path');
+var base64Img = require('base64-img')
 // var upload = multer({ dest: 'uploads/' })
 
 
@@ -37,7 +38,8 @@ const contentSchema=new Schema({
 pageNo:Number,
 image:String,
 title: String,
-description:String
+description:String,
+imgData: String
 })
 
 const Content=mongoose.model('Content' ,contentSchema);
@@ -71,20 +73,34 @@ server.post('/profile', upload.single("file"), function (req, res, next) {
 
 server.post("/content",function(req,res){
     const content=new Content();
-    content.pageNo=req.body.pageNo;
+var base64;
+
+    base64Img.base64( `./uploads/${req.body.imgData}` , function(err, data) {
+        base64=data;
+        // console.log(data)
+        content.pageNo=req.body.pageNo;
     content.image=req.body.image;
     content.title=req.body.title;
     content.description=req.body.description;
+    content.imgData=base64;
 
-    res.json(content);
-    console.log("hello");
-    console.log(content);
+        res.json(content);
     content.save();
+    })
+    // content.pageNo=req.body.pageNo;
+    // content.image=req.body.image;
+    // content.title=req.body.title;
+    // content.description=req.body.description;
+    // content.imgData=base64Img.base64(req.body.imgData);
+
+    //     res.json(content);
+    // content.save();
+    
 })
 
 server.get("/getContent", function (req, res) {
     Content.find({},function(err,doc){
-        console.log(doc);
+        
         res.json(doc);
     })
 })
@@ -96,11 +112,10 @@ server.get("/json/:name/:surname", function (req, res) {
 })
 server.get("/body", function (req, res) {
 
-    let data = './uploads/10.jpg';
-    let buff = new Buffer(data);
-    let base64data = buff.toString('base64');
-    res.send(base64data);
-    console.log('"' + data + '" converted to Base64 is "' + base64data + '"');
+    base64Img.base64('./uploads/10.jpg', function(err, data) {
+        res.send(data);
+    })
+
 })
 
 server.listen(8080, function () {
