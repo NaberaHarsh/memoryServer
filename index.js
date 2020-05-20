@@ -35,6 +35,7 @@ mongoose.connect('mongodb://localhost:27017/memory', { useNewUrlParser: true })
 server.use(bodyParser.json());
 
 const contentSchema=new Schema({
+uid: String,
 pageNo:Number,
 image:String,
 title: String,
@@ -60,13 +61,15 @@ var base64;
     base64Img.base64( `./uploads/${req.body.imgData}` , function(err, data) {
         base64=data;
         // console.log(data)
-        content.pageNo=req.body.pageNo;
+    content.uid=req.body.uid;
+    content.pageNo=req.body.pageNo;
     content.image=req.body.image;
     content.title=req.body.title;
     content.name=req.body.name;
     content.description=req.body.description;
     content.imgData=base64;
 
+    console.log(req.body.uid);
         res.json(content);
     content.save();
     })
@@ -75,7 +78,7 @@ var base64;
 })
 
 server.get("/getContent", function (req, res) {
-    Content.find({},function(err,doc){
+    Content.find({uid:req.query.uid},function(err,doc){
         
         res.json(doc);
     })
