@@ -38,6 +38,7 @@ const contentSchema=new Schema({
 pageNo:Number,
 image:String,
 title: String,
+name: String,
 description:String,
 imgData: String
 })
@@ -51,25 +52,6 @@ server.post('/profile', upload.single("file"), function (req, res, next) {
     res.json(req.file.filename);
   })
 
-// server.post('/createpdf', (req,res)=>{
-//     // req.body will hold the text fields, if there were any
-//     console.log(req.body);
-// pdf.create(pdfTemplate(req.body), {}).toFile('memory.pdf', (err)=>{
-//     if(err){
-//         console.log("error");
-//         res.send( Promise.reject());
-//     }
-//     else{
-//     res.send( Promise.resolve());
-//     }
-// });
-
-// });
-
-// server.get('/fetchpdf', (req,res)=>{
-// res.sendFile(`${__dirname}/memory.pdf`)
-// })
-
 
 server.post("/content",function(req,res){
     const content=new Content();
@@ -81,20 +63,14 @@ var base64;
         content.pageNo=req.body.pageNo;
     content.image=req.body.image;
     content.title=req.body.title;
+    content.name=req.body.name;
     content.description=req.body.description;
     content.imgData=base64;
 
         res.json(content);
     content.save();
     })
-    // content.pageNo=req.body.pageNo;
-    // content.image=req.body.image;
-    // content.title=req.body.title;
-    // content.description=req.body.description;
-    // content.imgData=base64Img.base64(req.body.imgData);
-
-    //     res.json(content);
-    // content.save();
+    
     
 })
 
