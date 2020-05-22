@@ -18,7 +18,11 @@ const storage = multer.diskStorage({
         cb(null, file.originalname);
     }
 });
-var upload = multer({ storage: storage });
+var upload = multer({ storage: storage,
+    // limits:{
+    //     fileSize:1024*1024*5
+    // } 
+});
 
 const Schema = mongoose.Schema;
 
