@@ -82,23 +82,17 @@ var base64;
 })
 
 server.get("/getContent", function (req, res) {
-    Content.find({uid:req.query.uid},function(err,doc){
+    Content.find( {uid:req.query.uid},function(err,doc){
         
         res.json(doc);
-    })
+    }).sort({pageNo:1})
 })
 
-
-server.get("/json/:name/:surname", function (req, res) {
-    res.send(req.params);
-    console.log(req.params);
-})
-server.get("/body", function (req, res) {
-
-    base64Img.base64('./uploads/10.jpg', function(err, data) {
-        res.send(data);
+server.delete('/deletePage/:id',(req,res)=>{
+    Content.deleteOne({_id:req.params.id},function(err,doc){
+        console.log(doc);
+        res.json(doc);
     })
-
 })
 
 server.listen(8080, function () {
